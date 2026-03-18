@@ -1,0 +1,47 @@
+package cat.itacademy.s04.t02.n01.fruit.controller;
+
+
+import cat.itacademy.s04.t02.n01.fruit.model.FruitDTO;
+import cat.itacademy.s04.t02.n01.fruit.service.FruitService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/fruits")
+public class FruitController {
+
+    @Autowired
+    private FruitService fruitService;
+
+
+    @PostMapping()
+    public ResponseEntity<FruitDTO> create(@Valid @RequestBody FruitDTO fruitDTO) {
+        return new ResponseEntity<>(fruitService.create(fruitDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<FruitDTO>> getAll() {
+        return new ResponseEntity<>(fruitService.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FruitDTO> getById(@PathVariable Long id) {
+        return new ResponseEntity<>(fruitService.getById(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        fruitService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FruitDTO> update(@PathVariable Long id, @Valid @RequestBody FruitDTO fruitDTO) {
+        return new ResponseEntity<>(fruitService.update(id, fruitDTO), HttpStatus.OK);
+    }
+}

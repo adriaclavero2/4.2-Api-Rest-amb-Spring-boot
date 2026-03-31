@@ -1,0 +1,32 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-fruit-api
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fruit_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - fruit-network
+
+  app:
+    build: .
+    container_name: spring-fruit-api
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mysql-db
+    environment:
+      # IMPORTANTE: Estos nombres deben coincidir con tu application.properties
+      - DB_URL=jdbc:mysql://mysql-db:3306/fruit_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+      - DB_USER=user
+      - DB_PASS=password
+    networks:
+      - fruit-network
+
+networks:
+  fruit-network:
+    driver: bridge
